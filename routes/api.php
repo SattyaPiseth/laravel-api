@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthenticationController;
+use App\Http\Controllers\Api\categoryController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -44,3 +45,12 @@ Route::middleware(['auth:api'])->group(function(){
     Route::get('roles/{id}', [RoleController::class, 'show']);
     Route::delete('roles/{id}', [RoleController::class, 'destroy']);
 });
+
+Route::middleware(['auth:api'])->group(function(){
+    Route::get('category', [categoryController::class, 'index']);
+    Route::post('category', [categoryController::class, 'store']);
+    Route::put('category/{id}', [categoryController::class, 'update']);
+    Route::get('category/{id}', [categoryController::class, 'show']);
+    Route::delete('category/{id}', [categoryController::class, 'delete']);
+});
+
