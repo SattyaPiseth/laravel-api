@@ -15,7 +15,7 @@ class RoleController extends Controller
 {
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $roles = Role::orderBy('name', 'ASC');
+        $roles = Role::with('permissions');
         if ($request->has('search') && !empty($request->search)) {
             $roles = $roles->where('name', 'like', '%' . $request->search . '%');
         }
