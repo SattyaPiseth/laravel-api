@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Permission;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -14,18 +13,31 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        $role_admin = Role::create(['name' => 'admin']);
-        $role_standard = Role::create(['name' => 'User']);
+        $permissions = Permission::defaultPermission();
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
+        $this->command->info('Default Permissions added.');
 
-        $permission_read = Permission::create(['name' => 'list-user']);
-        $permission_edit = Permission::create(['name' => 'edit-user']);
-        $permission_write = Permission::create(['name' => 'create-user']);
-        $permission_delete = Permission::create(['name' => 'delete-user']);
+        $roles = Role::allRoles();
 
-        $permissions_admin = [$permission_read, $permission_edit, $permission_write, $permission_delete];
-
-        $role_admin->syncPermissions($permissions_admin);
-        $role_standard->givePermissionTo($permission_read);
+        foreach ($roles as $role) {
+            $role = Role::firstOrCreate(['name' => trim($role), 'guard_name' => 'web']);
+            switch ($role->name) {
+                case Role::ADMIN:
+                    $role->syncPermissions(Permission::all());
+                    break;
+                case Role::USER:
+                    $role->syncPermissions(Permission::where(function ($query) {
+                        $query->where('name', 'like', 'view_user')
+                            ->orWhere('name', 'like', 'view_category')
+                            ->orWhere('name', 'like', 'view_brand')
+                            ->orWhere('name', 'like', '%product')
+                            ->orWhere('name', 'like', '%address');
+                    })->get());
+            }
+            $this->command->info('Adding users with teams...');
+        }
+        $this->command->warn('All done :');
     }
 }
