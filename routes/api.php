@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthenticationController;
 use App\Http\Controllers\Api\categoryController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\FileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,7 +37,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('users/{id}', [UserController::class, 'destroy']);
 });
 
-
 Route::post('roles', [RoleController::class, 'store']);
 Route::put('roles/{id}', [RoleController::class, 'update']);
 
@@ -54,3 +54,11 @@ Route::middleware(['auth:api'])->group(function(){
     Route::delete('category/{id}', [categoryController::class, 'delete']);
 });
 
+
+// about files api routes
+Route::get('files', [FileController::class, 'index']);
+Route::post('files', [FileController::class, 'store_single']);
+Route::post('files/multiple', [FileController::class, 'store_multiple']);
+Route::get('files/{id}', [FileController::class, 'show']);
+Route::delete('files/{id}', [FileController::class, 'delete']);
+Route::delete('files', [FileController::class, 'deleteAll']);

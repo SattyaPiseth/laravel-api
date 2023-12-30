@@ -16,7 +16,8 @@ class UserController extends Controller
 {
     public function index(Request $request): \Illuminate\Http\JsonResponse
     {
-        $users = User::with('roles');
+
+        $users = User::with('roles')->withoutRole('admin');
         if ($request->has('search') && !empty($request->search)) {
             $users = $users->where('name', 'like', '%' . $request->search . '%');
         }
