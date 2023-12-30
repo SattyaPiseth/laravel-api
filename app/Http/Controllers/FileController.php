@@ -37,8 +37,15 @@ class FileController extends Controller
         if ($filePath) {
 
             return response()->json([
-                'message' => 'File uploaded successfully!',
-                'file' => $filePath
+
+                'message' => 'File uploaded successfully.',
+                'file' => [
+                    'name' => basename($filePath),
+                    'url' => Storage::disk('public')->url($filePath),
+                    'size' => round(Storage::disk('public')->size($filePath) / 1024 / 1024, 2) . 'MB',
+                    'created_at' => \Carbon\Carbon::parse(Storage::disk('public')->lastModified($filePath))->diffForHumans(),
+                    'extension' => pathinfo($filePath, PATHINFO_EXTENSION),
+                ]
             ], 201);
         }
 
