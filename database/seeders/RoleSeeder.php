@@ -15,14 +15,14 @@ class RoleSeeder extends Seeder
     {
         $permissions = Permission::defaultPermission();
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'api']);
         }
         $this->command->info('Default Permissions added.');
 
         $roles = Role::allRoles();
 
         foreach ($roles as $role) {
-            $role = Role::firstOrCreate(['name' => trim($role), 'guard_name' => 'web']);
+            $role = Role::firstOrCreate(['name' => trim($role), 'guard_name' => 'api']);
             switch ($role->name) {
                 case Role::ADMIN:
                     $role->syncPermissions(Permission::all());
