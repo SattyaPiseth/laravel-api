@@ -29,7 +29,7 @@ class FileController extends Controller
     public function store_single(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'file' => 'required|mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf|max:2048'
+            'file' => 'required|mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf|max:15360'
         ]);
 
         $fileName = md5($request->file->getClientOriginalName() . time()) . "." . $request->file->getClientOriginalExtension();
@@ -53,7 +53,6 @@ class FileController extends Controller
             'message' => 'File not uploaded!',
         ], 400);
     }
-
     public function show($id): \Illuminate\Http\JsonResponse
     {
         $file = Storage::disk('public')->exists('uploads/' . $id);

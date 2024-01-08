@@ -27,15 +27,7 @@ class UserController extends Controller
 
         ],200);
     }
-
-    public function create(Request $request): Response
-    {
-        return Inertia::render('User/Create', [
-            'roles' => Role::whereNotIn('name', ['Admin'])->pluck('name')
-        ]);
-
-    }
-
+    
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         if (auth('api')->user()->hasRole('admin')) {
@@ -120,9 +112,20 @@ class UserController extends Controller
 
   public function show($id): \Illuminate\Http\JsonResponse
   {
+          // estimate response status
+          $status = 200;
+          // get user
+          $user = User::with('roles')->find($id);
+          // if user not found
+          if (!$user) {
+              // set status to 404
+              $status = 404;
+              // set user to null
+              $user = null;
+          }
+          // return response
           return response()->json([
-      'user' => User::with('roles')->find($id),
-
-    ],200);
+              'user' => $user
+          ], $status);
   }
 }
