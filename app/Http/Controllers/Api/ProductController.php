@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductsResource;
+use App\Models\Product;
 use App\Models\Products;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +32,7 @@ class ProductController extends Controller
             ], 404);
         }
         $response = [
-            'products' => $products->items(),
+            'products' => $products,
             'files' => [],
         ];
         foreach ($files as $file) {
@@ -111,7 +112,10 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $products=Product::find($id);
+        return response()->json([
+            'products'=>$products
+        ]);
     }
 
     /**

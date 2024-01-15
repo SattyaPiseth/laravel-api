@@ -56,10 +56,11 @@ class BrandController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        return response([
-            'brand' => new BrandResource($id)
+        $brand =Brand::find($id);
+        return response()->json([
+            'brand'=>$brand
         ]);
     }
 

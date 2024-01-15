@@ -23,10 +23,13 @@ class CategoryController extends Controller
         return response()->json(['category' => $category], 200);
     }
 
-    public function show(Category $id)
+    public function show($id)
     {
 
-        return new CategoryResource($id);
+        $categorise=Category::find($id);
+        return response()->json([
+            'categories'=>$categorise
+        ]);
     }
 
     public function store(Request $request)
